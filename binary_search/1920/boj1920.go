@@ -13,7 +13,7 @@ var N,M int
 var arr []int
 func binary_search(target int) int{
 	st:=0
-	en:=N-1
+	en:=N-1 
 	mid:=0
 	for st<=en {
 		mid=(st+en)/2
