@@ -1,45 +1,37 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"time"
 )
-var n,m int
-var reader *bufio.Reader=bufio.NewReader(os.Stdin)
-var writer *bufio.Writer=bufio.NewWriter(os.Stdout)
-var arr[] int
-func find(key int) int{ //근본 찾기
-	if(key==arr[key]){
-		return key
-	}else{
-		arr[key]=find(arr[key])
-		return arr[key]
-	}
+
+func pinger(c chan string) {
+  for i := 0; i < 10; i++ {
+    c <- "ping"
+  }
 }
-func union(a,b int){
-	arr[find(arr[b])]=find(arr[a])
+
+func ponger(c chan string) {
+  for i := 0; i < 10; i++ {
+    c <- "pong"
+  }
 }
-func is_union(a,b int){
-	if find(a)==find(b){
-		fmt.Fprintln(writer,"YES")
-	}else{
-		fmt.Fprintln(writer,"NO")
-	}
+
+func printer(c chan string) {
+  for i := 0; i < 10; i++ {
+    msg := <-c
+    fmt.Println(msg)
+    time.Sleep(time.Second * 1)
+  }
 }
-func main(){
-	defer writer.Flush()
-	fmt.Fscanln(reader,&n,&m)
-	for i:=0;i<=n;i++{
-		arr=append(arr,i)
-	}
-	for i:=0;i<m;i++{
-		var k,a,b int
-		fmt.Fscanln(reader,&k,&a,&b)
-		if k==0{
-			union(a,b)
-		}else{
-			is_union(a,b)
-		}
-	}
+
+func main() {
+  var c chan string = make(chan string)
+
+  go pinger(c)
+  go ponger(c)
+  go printer(c)
+
+  var s string
+  fmt.Scanln(&s)
 }
